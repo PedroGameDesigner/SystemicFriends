@@ -1,0 +1,209 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+namespace DefaultNamespace
+{
+    public class FriendshipSimulation : MonoBehaviour
+    {
+        private int _tickTime = 0;
+
+        public List<Character> Characters;
+        public List<Challenge> Challenges;
+
+        public int MaxRelationIncrement;
+        public int MinRelationIncrement;
+
+        private Challenge RandomChallenge => Challenges[Random.Range(0, Challenges.Count)];
+
+        private List<Character> winners = new List<Character>();
+        private List<Character> losers = new List<Character>();
+
+        private List<Character> affected = new List<Character>();
+        private List<Character> others = new List<Character>();
+
+        public bool startSimulation = false;
+
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                startSimulation = true;
+            }
+
+            if (startSimulation)
+            {
+                _tickTime++;
+                Debug.Log("Tick:" + _tickTime);
+                Tick();
+            }
+        }
+
+        private void Tick()
+        {
+            CharacterFaceChallenge();
+            WinnersHelpLosers();
+            LosersTakeAdvantageOfWinners();
+            CharacterJudgeFriendShip();
+
+            if (Characters.Count == 1)
+            {
+                startSimulation = false;
+            }
+        }
+
+        public void CharacterFaceChallenge()
+        {
+            winners.Clear();
+            losers.Clear();
+
+            Challenge newChallenge = RandomChallenge;
+
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Character character = Characters[i];
+                if (character.ChallengeOverCome(newChallenge))
+                {
+                    winners.Add(character);
+                }
+                else
+                {
+                    losers.Add(character);
+                }
+            }
+            
+            Debug.Log("Winners");
+            winners.ForEach(winner => Debug.Log(winner.characterName));
+            
+            Debug.Log("Losers");
+            losers.ForEach(losers => Debug.Log(losers.characterName));
+        }
+
+        public void WinnersHelpLosers()
+        {
+            if (winners.Count == 0)
+            {
+                Debug.Log("No winners");
+                return;
+            }
+
+            List<Character> newWinners = new List<Character>();
+
+            for (int i = 0; i < winners.Count; i++)
+            {
+                for (int j = losers.Count - 1; j >= 0; j--)
+                {
+                    Character winner = winners[i];
+                    Character loser = losers[j];
+                    bool willHelp = Random.Range(0f, 1f) >= 0.5;
+
+                    if (willHelp)
+                    {
+                        Debug.Log($"Character {winner.characterName} helps {loser.characterName}"); 
+                        
+                        newWinners.Add(loser);
+                        losers.Remove(loser);
+                        winner.RelationUpdate(loser, MinRelationIncrement);
+                        loser.RelationUpdate(winner, MaxRelationIncrement);
+                        return;
+                    }
+                }
+            }
+
+            winners.AddRange(newWinners);
+        }
+
+        public void LosersTakeAdvantageOfWinners()
+        {
+            if (losers.Count == 0)
+            {
+                Debug.Log("No lossers");
+                return;
+            }
+
+            for (int i = 0; i < losers.Count; i++)
+            {
+                for (int j = 0; j < winners.Count; j++)
+                {
+                    Character loser = losers[i];
+                    Character winner = winners[j];
+
+                    bool willTakeAdvantage = Random.Range(0f, 1f) >= 0.5;
+
+                    if (willTakeAdvantage)
+                    {
+                        Debug.Log($"Character {loser.characterName} takes advantage of {winner.characterName}");
+                        
+                        winner.RelationUpdate(loser, -MaxRelationIncrement);
+                        winners.Add(loser);
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        public void CharacterJudgeFriendShip()
+        {
+            for (int i = Characters.Count - 1; i >= 0; i--)
+            {
+                Character judge = Characters[i];
+                Character friendToJudge = judge.WillJudgeFriend();
+                
+                if (friendToJudge != null)
+                {
+                    Debug.Break();
+                    Debug.Log($"Character {judge.characterName} started trial against {friendToJudge.characterName}");
+                    
+                    affected.Add(judge);
+                    affected.Add(friendToJudge);
+
+                    others = Characters.Where(friend => friend.characterName != judge.characterName &&
+                                                        friend.characterName != friendToJudge.characterName).ToList();
+
+                    Character friendToExpel = Judgment();
+                    
+                    Debug.Log($"The group has decided to expel {friendToExpel.characterName}");
+                    
+                    Characters.Remove(friendToExpel);
+                    Characters.ForEach(characters => characters.RemoveFriendShip(friendToExpel));
+                }
+                
+                affected.Clear();
+                others.Clear();
+            }
+
+            //startSimulation = false;
+        }
+
+        public Character Judgment()
+        {
+            int firstAffectedLevel = SumRelationLevel(others, affected[0]);
+            int secondAffectedLevel = SumRelationLevel(others, affected[1]);
+
+            Character friendToExpel = firstAffectedLevel > secondAffectedLevel ? affected[1] : affected[0];
+
+            if (firstAffectedLevel == secondAffectedLevel)
+            {
+                friendToExpel = affected[Random.Range(0, affected.Count)];
+            }
+            
+            return friendToExpel;
+        }
+
+        public int SumRelationLevel(List<Character> judges, Character affected)
+        {
+            int totalRelationLevel = 0;
+            
+            for (int i = 0; i < judges.Count; i++)
+            {
+                totalRelationLevel += judges[i].RelationLevel(affected);
+            }
+
+            return totalRelationLevel;
+        }
+    }
+}

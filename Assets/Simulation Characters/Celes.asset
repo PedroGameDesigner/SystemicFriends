@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e5bd8730e00454bb66e0a3e54f835a, type: 3}
+  m_Name: Celes
+  m_EditorClassIdentifier: 
+  personality: 0
+  relations:
+  - character: {fileID: 11400000, guid: 9385ea45ebce9d449ba11f213feeba99, type: 2}
+    level: 100
+  - character: {fileID: 11400000, guid: 512994f441a3dd841bead8b1f1b4f864, type: 2}
+    level: 86
+  skills:
+  - challenge: 0
+    skillLevel: 10

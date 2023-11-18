@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f76856539fa2d5428a2fd42e0468004, type: 3}
-  m_Name: Fight Monster
+  m_Name: Win the favor of GOD
   m_EditorClassIdentifier: 
-  challengeType: 0
-  difficulty: 125
+  challengeType: 2
+  difficulty: 150

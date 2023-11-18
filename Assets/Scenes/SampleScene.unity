@@ -158,13 +158,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 39ae351a35195ca4ba5d976c895bf16d, type: 2}
   - {fileID: 11400000, guid: a4f445095510bc74e87619fc3f83861a, type: 2}
   Challenges:
-  - {fileID: 11400000, guid: 16396960ac5a08149a0229508f1d526f, type: 2}
+  - {fileID: 11400000, guid: 2615a7fe43df3ff499fd676b165708ec, type: 2}
   - {fileID: 11400000, guid: 7e606917ca7a1ae4b872c035797e32db, type: 2}
   - {fileID: 11400000, guid: 7872b5a5057916a4e9dd2029b93b7814, type: 2}
+  - {fileID: 11400000, guid: 39aaf72e9ce83324b800f33b5cb58a97, type: 2}
+  - {fileID: 11400000, guid: 16396960ac5a08149a0229508f1d526f, type: 2}
+  - {fileID: 11400000, guid: ee93e70104565b7439c1d9dee2f38678, type: 2}
+  - {fileID: 11400000, guid: e95b9b21636316047b34414c985bea8d, type: 2}
+  - {fileID: 11400000, guid: 865f277f0cd40044ca7faf4d88ffe4b8, type: 2}
+  - {fileID: 11400000, guid: 4ca7891d9229515439568f45e41470e1, type: 2}
   MaxRelationIncrement: 30
   MinRelationIncrement: 6
-  MaxtRelationLevel: 50
-  MinRelationLevel: 10
+  MaxtRelationLevel: 100
+  MinRelationLevel: 100
   Characters: []
   startSimulation: 0
 --- !u!4 &1051741180

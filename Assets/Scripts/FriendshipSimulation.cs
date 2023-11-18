@@ -297,7 +297,7 @@ namespace DefaultNamespace
                     Debug.Log($"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName} will beg");
 
                     int friendShipLevel = characterBegging.RelationLevel(characterLeaving);
-                    bool characterWillStay = Random.Range(0, 100) >= friendShipLevel;
+                    bool characterWillStay = Random.Range(0, 100) <= friendShipLevel;
 
                     if (characterWillStay)
                     {

@@ -274,6 +274,7 @@ namespace DefaultNamespace
 
                     Characters.Remove(friendToExpel);
                     Characters.ForEach(characters => characters.RemoveFriendShip(friendToExpel));
+                    Debug.Break();
                 }
 
                 affected.Clear();
@@ -330,12 +331,16 @@ namespace DefaultNamespace
                         
                         characterLeaving.SetRelationLevel(characterBegging, friendShipLevel / 2);
                         characterBegging.SetRelationLevel(characterLeaving, friendShipLevel / 2);
+                        
+                        Debug.Break();
                     }
                     else
                     {
                         FriendshipSimulationUI.AddMessage($"Will leave. {characterBegging.characterName} will die alone", characterLeaving.characterName,
                             characterLeaving.characterNameColor);
                         Characters.Remove(characterLeaving);
+                        
+                        Debug.Break();
                     }
                 }
             }

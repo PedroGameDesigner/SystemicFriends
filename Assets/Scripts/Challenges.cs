@@ -2,8 +2,9 @@ using UnityEngine;
 
 public enum ChallengeType
 {
-    Physic,
-    Love
+    Physical,
+    Mental,
+    Social
 }
 
 [CreateAssetMenu(menuName = "New Challenge")]

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a7d8209bc9e84d4193314f2612dfb07, type: 3}
   m_Name: Slicker
   m_EditorClassIdentifier: 
-  solidarity: 40
-  selfiness: 25
-  gratitude: 5
-  charisma: 10
-  resentment: 20
+  solidarity: 15
+  selfiness: 10
+  gratitude: 30
+  charisma: 40
+  resentment: 5

@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bdbb6d3e89448c8de1b1999c6f359f, type: 3}
   m_Name: Celes
   m_EditorClassIdentifier: 
-  personality: {fileID: 0}
-  skills: []
+  color: {r: 0.8962264, g: 0.75928533, b: 0.32551616, a: 1}
+  personality: {fileID: 11400000, guid: 3f13fc04e2c0a2046ab08ecc0c5fcbc7, type: 2}
+  skills:
+  - challenge: 0
+    skillLevel: 30
+  - challenge: 1
+    skillLevel: 40
+  - challenge: 2
+    skillLevel: 30

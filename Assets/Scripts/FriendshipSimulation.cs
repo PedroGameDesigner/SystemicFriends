@@ -34,7 +34,7 @@ namespace DefaultNamespace
 
         public bool startSimulation = false;
 
-        private void Start()
+        private void Awake()
         {
             Setup();
         }

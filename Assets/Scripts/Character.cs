@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
 {
     public CharacterSettings Settings;
     public string characterName => Settings.characterName;
+    public Color characterNameColor => Settings.color;
     public Personality Personality => Settings.personality;
     public List<Relationship> relations;
     

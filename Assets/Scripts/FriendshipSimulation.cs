@@ -132,8 +132,8 @@ namespace DefaultNamespace
             }
 
             FriendshipSimulationUI.AddMessage(newChallenge.challengeName, "Challenge", Color.black);
-            winners.ForEach(winner => FriendshipSimulationUI.AddMessage(winner.characterName, "Winners", Color.black));
-            losers.ForEach(losers => FriendshipSimulationUI.AddMessage(losers.characterName, "Winners", Color.black));
+            winners.ForEach(winner => FriendshipSimulationUI.AddMessage(winner.characterName, "Winners", Color.green));
+            losers.ForEach(losers => FriendshipSimulationUI.AddMessage(losers.characterName, "Losers", Color.red));
         }
 
         public void WinnersHelpLosers()
@@ -154,7 +154,7 @@ namespace DefaultNamespace
                     Character loser = losers[j];
 
                     int randomDice = Random.Range(0, 100);
-                    bool willHelp = randomDice >= winner.Personality.Solidarity;
+                    bool willHelp = randomDice <= winner.Personality.Solidarity;
 
                     FriendshipSimulationUI.AddMessage(
                         $"May Help {loser.characterName}. DiceRoll:{randomDice}  Solidarity:{winner.Personality.Solidarity}",
@@ -201,10 +201,10 @@ namespace DefaultNamespace
                     Character winner = winners[j];
 
                     int randomDice = Random.Range(0, 100);
-                    bool willTakeAdvantage = Random.Range(0, 100) <= loser.Personality.Selfiness;
+                    bool willTakeAdvantage = randomDice <= loser.Personality.Selfiness;
                     
                     FriendshipSimulationUI.AddMessage(
-                        $"May Takes Advantage of {winner.characterName}. DiceRoll:{randomDice}  Solidarity:{loser.Personality.Selfiness}",
+                        $"May Takes Advantage of {winner.characterName}. DiceRoll:{randomDice}  Selfiness:{loser.Personality.Selfiness}",
                         loser.characterName,
                         loser.characterNameColor);
 

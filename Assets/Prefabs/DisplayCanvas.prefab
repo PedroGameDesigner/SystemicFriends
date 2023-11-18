@@ -213,7 +213,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1033731273053642672}
   m_Direction: 2
   m_Value: 1.0000002
-  m_Size: 0.70525724
+  m_Size: 0.7053383
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1070,6 +1070,7 @@ MonoBehaviour:
   messageHolder: {fileID: 5265442161335015334}
   characterPrefab: {fileID: 5612127656325726949, guid: e2912f25e6a7e8f48882a86c637aba21, type: 3}
   messagePrefab: {fileID: 6543053923724088663, guid: 60116d21e1531b649b110029581e6918, type: 3}
+  maxMessages: 50
 --- !u!1 &6601714132249111735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1156,6 +1157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5265442161335015334}
   - component: {fileID: 6238258285584825005}
+  - component: {fileID: 6985375741481665117}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -1181,7 +1183,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1195.082}
+  m_SizeDelta: {x: -983.26, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6238258285584825005
 MonoBehaviour:
@@ -1209,6 +1211,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &6985375741481665117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6890589071668750572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &6900703237834989929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,8 +1851,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4033532982571406389}
   m_HandleRect: {fileID: 5972781156367026784}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.49869546
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

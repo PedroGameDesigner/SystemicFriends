@@ -257,7 +257,7 @@ namespace DefaultNamespace
                     Character winner = winners[j];
 
                     float loserWinner = MinRelationIncrement * (1 + (loser.Personality.Resentment / 100f -
-                                                                     winner.Personality.Charisma / 100f));
+                                                                     winner.Personality.Charisma / 100f)) / winners.Count;
                     loser.RelationUpdate(winner, (int)-loserWinner);
                 }
             }
@@ -359,7 +359,9 @@ namespace DefaultNamespace
                     {
                         FriendshipSimulationUI.AddMessage($"Goodbye, {characterBegging.characterName}.", characterLeaving.characterName,
                             characterLeaving.characterNameColor);
-                        FriendshipSimulationUI.AddMessage($"Then {characterBegging.characterName} leaves. {characterBegging.characterName} will die alone", "Narration",
+                        FriendshipSimulationUI.AddMessage($"Then {characterLeaving.characterName} leaves. {characterBegging.characterName} will die alone...", "Narration",
+                            Color.black);
+                        FriendshipSimulationUI.AddMessage($"", "THE END",
                             Color.black);
                         Characters.Remove(characterLeaving);
                     }

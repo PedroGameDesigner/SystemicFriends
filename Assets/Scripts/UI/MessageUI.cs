@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MessageUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private TextMeshProUGUI title;
+    [SerializeField]
+    private TextMeshProUGUI content;
 
-    // Update is called once per frame
-    void Update()
+
+    public void SetMessage(string content, string title, Color color)
     {
-        
+        this.title.text = title;
+        this.title.color = color;
+        this.content.text = content;
     }
 }

@@ -11,7 +11,8 @@ namespace DefaultNamespace
     {
         private int _tickTime = 0;
 
-        [Header("Setup")] public List<CharacterSettings> CharactersSettings;
+        [Header("Setup")] 
+        public List<CharacterSettings> CharactersSettings;
         public List<Challenge> Challenges;
 
         public int MaxRelationIncrement;
@@ -20,7 +21,9 @@ namespace DefaultNamespace
         public int MaxtRelationLevel = 50;
         public int MinRelationLevel = 5;
 
-        [Header("Simulation")] public List<Character> Characters;
+        [Header("Simulation")]
+        public int simulationTicks = 5;
+        public List<Character> Characters;
 
         private Challenge RandomChallenge => Challenges[Random.Range(0, Challenges.Count)];
 
@@ -30,7 +33,8 @@ namespace DefaultNamespace
         private List<Character> affected = new List<Character>();
         private List<Character> others = new List<Character>();
 
-        public bool startSimulation = false;
+        public bool simulating = false;
+        public bool gameOver = false;
 
         private void Awake()
         {
@@ -38,17 +42,20 @@ namespace DefaultNamespace
         }
 
         public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
+        {   
+            if (Input.GetKeyDown(KeyCode.Space) && !simulating && !gameOver)
             {
-                startSimulation = true;
-            }
+                simulating = true;
 
-            if (startSimulation)
-            {
-                _tickTime++;
-                Debug.Log("Tick:" + _tickTime);
-                Tick();
+                for (int i = 0; i < simulationTicks; i++)
+                {
+                    _tickTime++;
+                    Debug.Log("Tick:" + _tickTime);
+                    // FriendshipSimulationUI.
+                    Tick();        
+                }
+                
+                simulating = false;
             }
         }
 
@@ -103,7 +110,7 @@ namespace DefaultNamespace
 
             if (Characters.Count == 1)
             {
-                startSimulation = false;
+                gameOver = true;
             }
         }
 
@@ -242,7 +249,6 @@ namespace DefaultNamespace
 
                 if (friendToJudge != null)
                 {
-                    Debug.Break();
                     Debug.Log($"Character {judge.characterName} started trial against {friendToJudge.characterName}");
 
                     affected.Add(judge);
@@ -300,7 +306,6 @@ namespace DefaultNamespace
 
                 if (characterBegging != null)
                 {
-                    Debug.Break();
                     Debug.Log(
                         $"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName} will beg");
 

@@ -6,13 +6,7 @@ using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 
-public enum Personality
-{
-    Friendly,
-    Selfish
-}
-
-[CreateAssetMenu(menuName = "New Systemic Friend")]
+[CreateAssetMenu(menuName = "SystemicFriendship/Character")]
 public class Character : ScriptableObject
 {
     public string characterName => name;

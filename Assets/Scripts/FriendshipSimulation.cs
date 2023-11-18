@@ -34,6 +34,8 @@ namespace DefaultNamespace
         public bool simulating = false;
         public bool gameOver = false;
 
+        private int currentTick;
+
         private void Awake()
         {
             Setup();
@@ -44,14 +46,16 @@ namespace DefaultNamespace
             if (Input.GetKeyDown(KeyCode.Space) && !simulating && !gameOver)
             {
                 simulating = true;
+                currentTick = 0;
 
-                for (int i = 0; i < simulationTicks; i++)
+                while (currentTick < simulationTicks)
                 {
+                    currentTick++;
                     _tickTime++;
                     FriendshipSimulationUI.AddMessage($"Tick{_tickTime}", "Simulation step", Color.black);
                     Tick();
                 }
-
+                
                 simulating = false;
             }
         }
@@ -274,7 +278,7 @@ namespace DefaultNamespace
 
                     Characters.Remove(friendToExpel);
                     Characters.ForEach(characters => characters.RemoveFriendShip(friendToExpel));
-                    Debug.Break();
+                    currentTick = simulationTicks;
                 }
 
                 affected.Clear();
@@ -332,16 +336,15 @@ namespace DefaultNamespace
                         characterLeaving.SetRelationLevel(characterBegging, friendShipLevel / 2);
                         characterBegging.SetRelationLevel(characterLeaving, friendShipLevel / 2);
                         
-                        Debug.Break();
                     }
                     else
                     {
                         FriendshipSimulationUI.AddMessage($"Will leave. {characterBegging.characterName} will die alone", characterLeaving.characterName,
                             characterLeaving.characterNameColor);
                         Characters.Remove(characterLeaving);
-                        
-                        Debug.Break();
                     }
+
+                    currentTick = simulationTicks;
                 }
             }
         }

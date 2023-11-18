@@ -49,7 +49,7 @@ public class FriendshipSimulationUI : MonoBehaviour
         }
     }
 
-    public static void AddMessage(string title, string content)
+    public static void AddMessage(string content, string title, Color color)
     {
 
     }

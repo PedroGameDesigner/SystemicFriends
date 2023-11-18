@@ -12,7 +12,7 @@ namespace DefaultNamespace
         private int _tickTime = 0;
 
         [Header("Setup")]
-        public List<Character> CharactersTemplates;
+        public List<CharacterSettings> CharactersSettings;
         public List<Challenge> Challenges;
         
         public int MaxRelationIncrement;
@@ -57,9 +57,14 @@ namespace DefaultNamespace
         private void Setup()
         {
             Characters = new List<Character>();
-            CharactersTemplates.ForEach(template =>
+            CharactersSettings.ForEach(setting =>
             {
-                Characters.Add(Instantiate(template));
+                GameObject newCharacterGameObject = new GameObject(setting.characterName);
+                newCharacterGameObject.transform.SetParent(transform);
+                
+                Character newCharacter = newCharacterGameObject.AddComponent<Character>(); 
+                newCharacter.Settings = setting;
+                Characters.Add(newCharacter);
             });
             
             
@@ -286,15 +291,20 @@ namespace DefaultNamespace
                 if (characterBegging != null)
                 {
                     Debug.Break();
-                    Debug.Log($"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName}");
+                    Debug.Log($"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName} will beg");
 
                     int friendShipLevel = characterBegging.RelationLevel(characterLeaving);
                     bool characterWillStay = Random.Range(0, 100) >= friendShipLevel;
 
                     if (characterWillStay)
                     {
-                        characterLeaving.RelationUpdate(characterBegging,friendShipLevel/2);
-                        characterBegging.RelationUpdate(characterLeaving,friendShipLevel/2);
+                        characterLeaving.SetRelationLevel(characterBegging,friendShipLevel/2);
+                        characterBegging.SetRelationLevel(characterLeaving,friendShipLevel/2);
+                    }
+                    else
+                    {
+                        Debug.Log($"Character {characterLeaving.characterName} leave the group {characterBegging.characterName} will die alone...");
+                        Characters.Remove(characterLeaving);
                     }
                     
                 }

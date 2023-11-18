@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-
-[CreateAssetMenu(menuName = "SystemicFriendship/Character")]
-public class Character : ScriptableObject
+public class Character : MonoBehaviour
 {
-    public string characterName => name;
-    public Personality personality;
+    public CharacterSettings Settings;
+    public string characterName => Settings.characterName;
     public List<Relationship> relations;
-    public List<ChallengeSkill> skills;
     
-
     public bool ChallengeOverCome(Challenge challenge)
     {
-        ChallengeSkill challengeSkill = skills.First(skill => skill.challenge == challenge.challengeType);
+        ChallengeSkill challengeSkill = Settings.skills.First(skill => skill.challenge == challenge.challengeType);
         int skill = Random.Range(0, 100) + challengeSkill.skillLevel;
 
         return skill >= challenge.difficulty;
@@ -30,6 +27,21 @@ public class Character : ScriptableObject
             Relationship relation = relations.First(relationship => relationship.character.characterName == character.characterName);
             int newRelationLevel = relation.level + level;
             relation.level = Mathf.Clamp(newRelationLevel, 0, 100);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Debug.Break();
+            throw;
+        }
+    }
+    
+    public void SetRelationLevel(Character character, int level)
+    {
+        try
+        {
+            Relationship relation = relations.First(relationship => relationship.character.characterName == character.characterName);
+            relation.level = level;
         }
         catch (Exception e)
         {

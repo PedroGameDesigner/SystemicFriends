@@ -13,13 +13,7 @@ MonoBehaviour:
   m_Name: Locke
   m_EditorClassIdentifier: 
   personality: 0
-  relations:
-  - character: {fileID: 11400000, guid: 98269250d9344314e84337d7f9c86b2d, type: 2}
-    level: 56
-  - character: {fileID: 11400000, guid: 9385ea45ebce9d449ba11f213feeba99, type: 2}
-    level: 65
-  - character: {fileID: 11400000, guid: 512994f441a3dd841bead8b1f1b4f864, type: 2}
-    level: 0
+  relations: []
   skills:
   - challenge: 0
-    skillLevel: 25
+    skillLevel: 12

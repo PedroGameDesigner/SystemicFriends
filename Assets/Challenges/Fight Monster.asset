@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Fight Monster
   m_EditorClassIdentifier: 
   challengeType: 0
-  difficulty: 85
+  difficulty: 50

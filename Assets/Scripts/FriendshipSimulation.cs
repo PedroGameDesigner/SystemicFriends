@@ -11,12 +11,19 @@ namespace DefaultNamespace
     {
         private int _tickTime = 0;
 
-        public List<Character> Characters;
+        [Header("Setup")]
+        public List<Character> CharactersTemplates;
         public List<Challenge> Challenges;
-
+        
         public int MaxRelationIncrement;
         public int MinRelationIncrement;
 
+        public int MaxtRelationLevel = 50;
+        public int MinRelationLevel = 5;
+        
+        [Header("Simulation")]
+        public List<Character> Characters;
+        
         private Challenge RandomChallenge => Challenges[Random.Range(0, Challenges.Count)];
 
         private List<Character> winners = new List<Character>();
@@ -27,6 +34,11 @@ namespace DefaultNamespace
 
         public bool startSimulation = false;
 
+        private void Start()
+        {
+            Setup();
+        }
+        
         public void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -41,14 +53,51 @@ namespace DefaultNamespace
                 Tick();
             }
         }
+        
+        private void Setup()
+        {
+            Characters = new List<Character>();
+            CharactersTemplates.ForEach(template =>
+            {
+                Characters.Add(Instantiate(template));
+            });
+            
+            
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Character mainCharacter = Characters[i];
+                mainCharacter.relations = new List<Relationship>();
+                
+                Characters.ForEach(character =>
+                {
+                    if (mainCharacter.characterName != character.characterName)
+                    {
+                        mainCharacter.relations.Add(new Relationship
+                        {
+                            character = character,
+                            level = Random.Range(MinRelationLevel,MaxtRelationLevel)
+                        });
+                    }
+                } );
+            }
+        }
 
         private void Tick()
         {
             CharacterFaceChallenge();
             WinnersHelpLosers();
             LosersTakeAdvantageOfWinners();
-            CharacterJudgeFriendShip();
-
+            LoserResentWinners();
+            
+            if (Characters.Count > 2)
+            {
+                CharacterJudgeFriendShip();
+            }
+            else
+            {
+                CharacterBegCharacter();
+            }
+            
             if (Characters.Count == 1)
             {
                 startSimulation = false;
@@ -98,17 +147,19 @@ namespace DefaultNamespace
                 {
                     Character winner = winners[i];
                     Character loser = losers[j];
-                    bool willHelp = Random.Range(0f, 1f) >= 0.5;
+                    bool willHelp = Random.Range(0, 100) >= 50;
 
                     if (willHelp)
                     {
                         Debug.Log($"Character {winner.characterName} helps {loser.characterName}"); 
                         
-                        newWinners.Add(loser);
-                        losers.Remove(loser);
                         winner.RelationUpdate(loser, MinRelationIncrement);
                         loser.RelationUpdate(winner, MaxRelationIncrement);
-                        return;
+                        
+                        newWinners.Add(loser);
+                        losers.Remove(loser);
+                        
+                        break;
                     }
                 }
             }
@@ -124,6 +175,8 @@ namespace DefaultNamespace
                 return;
             }
 
+            List<Character> newWinners = new List<Character>();
+            
             for (int i = 0; i < losers.Count; i++)
             {
                 for (int j = 0; j < winners.Count; j++)
@@ -131,21 +184,40 @@ namespace DefaultNamespace
                     Character loser = losers[i];
                     Character winner = winners[j];
 
-                    bool willTakeAdvantage = Random.Range(0f, 1f) >= 0.5;
+                    bool willTakeAdvantage = Random.Range(0, 100) >= 50;
 
                     if (willTakeAdvantage)
                     {
                         Debug.Log($"Character {loser.characterName} takes advantage of {winner.characterName}");
                         
                         winner.RelationUpdate(loser, -MaxRelationIncrement);
-                        winners.Add(loser);
+                        
+                        loser.RelationUpdate(winner, -MinRelationIncrement);
+                        newWinners.Add(loser);
+                        losers.Remove(loser);
+                        
                         break;
                     }
                 }
             }
+            
+            winners.AddRange(newWinners);
         }
 
-
+        public void LoserResentWinners()
+        {
+            for (int i = 0; i < losers.Count; i++)
+            {
+                for (int j = 0; j < winners.Count; j++)
+                {
+                    Character loser = losers[i];
+                    Character winner = winners[j];
+                    
+                    loser.RelationUpdate(winner, -MinRelationIncrement);
+                }
+            }
+        }
+        
         public void CharacterJudgeFriendShip()
         {
             for (int i = Characters.Count - 1; i >= 0; i--)
@@ -175,8 +247,6 @@ namespace DefaultNamespace
                 affected.Clear();
                 others.Clear();
             }
-
-            //startSimulation = false;
         }
 
         public Character Judgment()
@@ -204,6 +274,31 @@ namespace DefaultNamespace
             }
 
             return totalRelationLevel;
+        }
+
+        public void CharacterBegCharacter()
+        {
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Character characterLeaving = Characters[i];
+                Character characterBegging = characterLeaving.WillJudgeFriend();
+                
+                if (characterBegging != null)
+                {
+                    Debug.Break();
+                    Debug.Log($"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName}");
+
+                    int friendShipLevel = characterBegging.RelationLevel(characterLeaving);
+                    bool characterWillStay = Random.Range(0, 100) <= friendShipLevel;
+
+                    if (characterWillStay)
+                    {
+                        characterLeaving.RelationUpdate(characterBegging,friendShipLevel/2);
+                        characterBegging.RelationUpdate(characterLeaving,friendShipLevel/2);
+                    }
+                    
+                }
+            }   
         }
     }
 }

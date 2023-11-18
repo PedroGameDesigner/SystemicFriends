@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Jump fire
   m_EditorClassIdentifier: 
   challengeType: 0
-  difficulty: 75
+  difficulty: 40

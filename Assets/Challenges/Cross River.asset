@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Cross River
   m_EditorClassIdentifier: 
   challengeType: 0
-  difficulty: 60
+  difficulty: 25

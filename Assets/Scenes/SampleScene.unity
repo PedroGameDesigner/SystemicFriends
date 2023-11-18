@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fc07a05e05e4486b990304854802b97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Characters:
+  CharactersTemplates:
   - {fileID: 11400000, guid: 98269250d9344314e84337d7f9c86b2d, type: 2}
   - {fileID: 11400000, guid: fe313ce6b2b875d458f62973234991fe, type: 2}
   - {fileID: 11400000, guid: 9385ea45ebce9d449ba11f213feeba99, type: 2}
@@ -163,6 +163,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7872b5a5057916a4e9dd2029b93b7814, type: 2}
   MaxRelationIncrement: 30
   MinRelationIncrement: 6
+  MaxtRelationLevel: 50
+  MinRelationLevel: 10
+  Characters: []
   startSimulation: 0
 --- !u!4 &1051741180
 Transform:

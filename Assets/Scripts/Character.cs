@@ -24,16 +24,25 @@ public class Character : ScriptableObject
     public bool ChallengeOverCome(Challenge challenge)
     {
         ChallengeSkill challengeSkill = skills.First(skill => skill.challenge == challenge.challengeType);
-        int skillBonus = challengeSkill.skillLevel;
+        int skill = Random.Range(0, 100) + challengeSkill.skillLevel;
 
-        return Random.Range(0, 100) + skillBonus >= challenge.difficulty;
+        return skill >= challenge.difficulty;
     }
 
     public void RelationUpdate(Character character, int level)
     {
-        Relationship relation = relations.First(relationship => relationship.character.characterName == character.characterName);
-        int newRelationLevel = relation.level + level;
-        relation.level = Mathf.Clamp(newRelationLevel, 0, 100);
+        try
+        {
+            Relationship relation = relations.First(relationship => relationship.character.characterName == character.characterName);
+            int newRelationLevel = relation.level + level;
+            relation.level = Mathf.Clamp(newRelationLevel, 0, 100);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Debug.Break();
+            throw;
+        }
     }
 
     public int RelationLevel(Character character)

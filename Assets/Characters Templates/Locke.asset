@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bdbb6d3e89448c8de1b1999c6f359f, type: 3}
   m_Name: Locke
   m_EditorClassIdentifier: 
-  personality: {fileID: 0}
-  skills: []
+  personality: {fileID: 11400000, guid: d4f8293752933a04daf551f2c128dacb, type: 2}
+  skills:
+  - challenge: 0
+    skillLevel: 25

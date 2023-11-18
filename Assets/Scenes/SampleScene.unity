@@ -152,11 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fc07a05e05e4486b990304854802b97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CharactersTemplates:
-  - {fileID: 11400000, guid: 98269250d9344314e84337d7f9c86b2d, type: 2}
-  - {fileID: 11400000, guid: fe313ce6b2b875d458f62973234991fe, type: 2}
-  - {fileID: 11400000, guid: 9385ea45ebce9d449ba11f213feeba99, type: 2}
-  - {fileID: 11400000, guid: 512994f441a3dd841bead8b1f1b4f864, type: 2}
+  CharactersSettings:
+  - {fileID: 11400000, guid: 0702fd00846ce1b4eb852cb03b7d2b69, type: 2}
+  - {fileID: 11400000, guid: 4f0f931906fbd72498745d6b1162d9a1, type: 2}
+  - {fileID: 11400000, guid: 39ae351a35195ca4ba5d976c895bf16d, type: 2}
+  - {fileID: 11400000, guid: a4f445095510bc74e87619fc3f83861a, type: 2}
   Challenges:
   - {fileID: 11400000, guid: 16396960ac5a08149a0229508f1d526f, type: 2}
   - {fileID: 11400000, guid: 7e606917ca7a1ae4b872c035797e32db, type: 2}

@@ -152,14 +152,15 @@ namespace DefaultNamespace
                 {
                     Character winner = winners[i];
                     Character loser = losers[j];
-                    bool willHelp = Random.Range(0, 100) >= 50;
+
+                    bool willHelp = Random.Range(0, 100) >= winner.Personality.Solidarity;
 
                     if (willHelp)
                     {
                         Debug.Log($"Character {winner.characterName} helps {loser.characterName}"); 
                         
-                        winner.RelationUpdate(loser, MinRelationIncrement);
-                        loser.RelationUpdate(winner, MaxRelationIncrement);
+                        winner.RelationUpdate(loser, MinRelationIncrement * (winner.Personality.Solidarity/100));
+                        loser.RelationUpdate(winner, MaxRelationIncrement * (loser.Personality.Gratitude/100));
                         
                         newWinners.Add(loser);
                         losers.Remove(loser);
@@ -189,15 +190,17 @@ namespace DefaultNamespace
                     Character loser = losers[i];
                     Character winner = winners[j];
 
-                    bool willTakeAdvantage = Random.Range(0, 100) >= 50;
+                    bool willTakeAdvantage = Random.Range(0, 100) <= loser.Personality.Selfiness;
 
                     if (willTakeAdvantage)
                     {
                         Debug.Log($"Character {loser.characterName} takes advantage of {winner.characterName}");
+
+                        int relationLevelLoserWinner = loser.RelationLevel(winner);
                         
-                        winner.RelationUpdate(loser, -MaxRelationIncrement);
+                        winner.RelationUpdate(loser, -(MaxRelationIncrement * (winner.Personality.Resentment/100) - loser.Personality.Charisma/100));
+                        loser.RelationUpdate(winner, -MinRelationIncrement * (1 - relationLevelLoserWinner/100));
                         
-                        loser.RelationUpdate(winner, -MinRelationIncrement);
                         newWinners.Add(loser);
                         losers.Remove(loser);
                         
@@ -218,7 +221,7 @@ namespace DefaultNamespace
                     Character loser = losers[i];
                     Character winner = winners[j];
                     
-                    loser.RelationUpdate(winner, -MinRelationIncrement);
+                    loser.RelationUpdate(winner, -(MinRelationIncrement * (loser.Personality.Resentment/100) - winner.Personality.Charisma/100));
                 }
             }
         }

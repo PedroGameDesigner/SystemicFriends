@@ -131,16 +131,20 @@ namespace DefaultNamespace
                 }
             }
 
-            FriendshipSimulationUI.AddMessage(newChallenge.challengeName, "Challenge", Color.black);
-            winners.ForEach(winner => FriendshipSimulationUI.AddMessage(winner.characterName, "Winners", Color.green));
-            losers.ForEach(losers => FriendshipSimulationUI.AddMessage(losers.characterName, "Losers", Color.red));
+            FriendshipSimulationUI.AddMessage($"The group has to {newChallenge.challengeName}. Will they be successful?", "Challenge", Color.black);
+            string winnersText = "";
+            winners.ForEach(winner => winnersText += winner.characterName + ", ");
+            FriendshipSimulationUI.AddMessage(winnersText, "Winners", Color.green);
+            string losersText = "";
+            losers.ForEach(loser => losersText += loser.characterName + ", ");
+            FriendshipSimulationUI.AddMessage(losersText, "Losers", Color.red);
         }
 
         public void WinnersHelpLosers()
         {
             if (winners.Count == 0)
             {
-                Debug.Log("No winners");
+                FriendshipSimulationUI.AddMessage("No winners", "Challenges", Color.black);
                 return;
             }
 
@@ -157,14 +161,17 @@ namespace DefaultNamespace
                     bool willHelp = randomDice <= winner.Personality.Solidarity;
 
                     FriendshipSimulationUI.AddMessage(
-                        $"May Help {loser.characterName}. DiceRoll:{randomDice}  Solidarity:{winner.Personality.Solidarity}",
+                        $"May Help {loser.characterName}? DiceRoll:{randomDice} Solidarity:{winner.Personality.Solidarity}",
                         winner.characterName,
                         winner.characterNameColor);
 
                     if (willHelp)
                     {
-                        FriendshipSimulationUI.AddMessage($"Helps {loser.characterName}", winner.characterName,
+                        FriendshipSimulationUI.AddMessage($"Don't fear, {loser.characterName}, I will save you!", winner.characterName,
                             winner.characterNameColor);
+
+                        FriendshipSimulationUI.AddMessage($"Thank you, {winner.characterName}. I would be lost without you.", loser.characterName,
+                            loser.characterNameColor);
 
                         float winnerLoserRelation = MinRelationIncrement * (1 + winner.Personality.Solidarity / 100f);
                         winner.RelationUpdate(loser, (int)winnerLoserRelation);
@@ -204,16 +211,19 @@ namespace DefaultNamespace
                     bool willTakeAdvantage = randomDice <= loser.Personality.Selfiness;
                     
                     FriendshipSimulationUI.AddMessage(
-                        $"May Takes Advantage of {winner.characterName}. DiceRoll:{randomDice}  Selfiness:{loser.Personality.Selfiness}",
+                        $"Should I Takes Advantage of {winner.characterName}? DiceRoll:{randomDice}  Selfiness:{loser.Personality.Selfiness}",
                         loser.characterName,
                         loser.characterNameColor);
 
                     if (willTakeAdvantage)
                     {
                         
-                        FriendshipSimulationUI.AddMessage($"Takes advantage of {winner.characterName}", loser.characterName,
+                        FriendshipSimulationUI.AddMessage($"Sorry, {winner.characterName} but I need to win!", loser.characterName,
                             loser.characterNameColor);
-                        
+
+                        FriendshipSimulationUI.AddMessage($"How you dare, {loser.characterName}?! I will remember this!.", winner.characterName,
+                            winner.characterNameColor);
+
                         float winnerLoserRelation = MaxRelationIncrement * (1 + (winner.Personality.Resentment / 100f -
                             loser.Personality.Charisma / 100f));
                         winner.RelationUpdate(loser, (int)-winnerLoserRelation);
@@ -258,7 +268,7 @@ namespace DefaultNamespace
 
                 if (friendToJudge != null)
                 {
-                    FriendshipSimulationUI.AddMessage($"Started trial against {friendToJudge.characterName}", judge.characterName,
+                    FriendshipSimulationUI.AddMessage($"I can't stand {friendToJudge.characterName} any longer! Everyone, get them out of the team or I will leave!", judge.characterName,
                         judge.characterNameColor);
                     
                     affected.Add(judge);
@@ -269,8 +279,13 @@ namespace DefaultNamespace
 
                     Character friendToExpel = Judgment();
                     
-                    FriendshipSimulationUI.AddMessage($"The group has decided to expel {friendToExpel.characterName}", "The group",
-                        Color.black);
+                    if (friendToExpel == friendToJudge)
+                        FriendshipSimulationUI.AddMessage($"The group has decided to expel {friendToExpel.characterName}", "The group",
+                            Color.black);
+                    else
+                        FriendshipSimulationUI.AddMessage($"Fine! Then I have nothing more to do with you...", friendToExpel.characterName,
+                            friendToExpel.characterNameColor);
+
 
                     Characters.Remove(friendToExpel);
                     Characters.ForEach(characters => characters.RemoveFriendShip(friendToExpel));
@@ -318,17 +333,20 @@ namespace DefaultNamespace
 
                 if (characterBegging != null)
                 {
-                    FriendshipSimulationUI.AddMessage($"Wanted to leave {characterBegging.characterName}", characterLeaving.characterName,
+                    FriendshipSimulationUI.AddMessage($"That was the last straw, {characterBegging.characterName}. we can't be together any longer", characterLeaving.characterName,
                         characterLeaving.characterNameColor);
+
+                    FriendshipSimulationUI.AddMessage($"No, {characterLeaving.characterName}, please don't go. Think about our friendship!", characterBegging.characterName,
+                        characterBegging.characterNameColor);
 
                     int friendShipLevel = characterBegging.RelationLevel(characterLeaving);
                     bool characterWillStay = Random.Range(0, 100) <= friendShipLevel;
 
                     if (characterWillStay)
                     {
-                        FriendshipSimulationUI.AddMessage($"Will Stay with {characterBegging.characterName}", characterLeaving.characterName,
+                        FriendshipSimulationUI.AddMessage($"You are right, {characterBegging.characterName}, I forgive you this time.", characterLeaving.characterName,
                             characterLeaving.characterNameColor);
-                        
+
                         characterLeaving.SetRelationLevel(characterBegging, friendShipLevel / 2);
                         characterBegging.SetRelationLevel(characterLeaving, friendShipLevel / 2);
                         
@@ -336,8 +354,10 @@ namespace DefaultNamespace
                     }
                     else
                     {
-                        FriendshipSimulationUI.AddMessage($"Will leave. {characterBegging.characterName} will die alone", characterLeaving.characterName,
+                        FriendshipSimulationUI.AddMessage($"Goodbye, {characterBegging.characterName}.", characterLeaving.characterName,
                             characterLeaving.characterNameColor);
+                        FriendshipSimulationUI.AddMessage($"Then {characterBegging.characterName} leaves. {characterBegging.characterName} will die alone", "Narration",
+                            Color.black);
                         Characters.Remove(characterLeaving);
                         
                         Debug.Break();

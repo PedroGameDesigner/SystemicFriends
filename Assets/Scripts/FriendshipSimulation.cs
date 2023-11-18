@@ -11,19 +11,17 @@ namespace DefaultNamespace
     {
         private int _tickTime = 0;
 
-        [Header("Setup")]
-        public List<CharacterSettings> CharactersSettings;
+        [Header("Setup")] public List<CharacterSettings> CharactersSettings;
         public List<Challenge> Challenges;
-        
+
         public int MaxRelationIncrement;
         public int MinRelationIncrement;
 
         public int MaxtRelationLevel = 50;
         public int MinRelationLevel = 5;
-        
-        [Header("Simulation")]
-        public List<Character> Characters;
-        
+
+        [Header("Simulation")] public List<Character> Characters;
+
         private Challenge RandomChallenge => Challenges[Random.Range(0, Challenges.Count)];
 
         private List<Character> winners = new List<Character>();
@@ -38,7 +36,7 @@ namespace DefaultNamespace
         {
             Setup();
         }
-        
+
         public void Update()
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -53,7 +51,7 @@ namespace DefaultNamespace
                 Tick();
             }
         }
-        
+
         private void Setup()
         {
             Characters = new List<Character>();
@@ -61,18 +59,18 @@ namespace DefaultNamespace
             {
                 GameObject newCharacterGameObject = new GameObject(setting.characterName);
                 newCharacterGameObject.transform.SetParent(transform);
-                
-                Character newCharacter = newCharacterGameObject.AddComponent<Character>(); 
+
+                Character newCharacter = newCharacterGameObject.AddComponent<Character>();
                 newCharacter.Settings = setting;
                 Characters.Add(newCharacter);
             });
-            
-            
+
+
             for (int i = 0; i < Characters.Count; i++)
             {
                 Character mainCharacter = Characters[i];
                 mainCharacter.relations = new List<Relationship>();
-                
+
                 Characters.ForEach(character =>
                 {
                     if (mainCharacter.characterName != character.characterName)
@@ -80,10 +78,10 @@ namespace DefaultNamespace
                         mainCharacter.relations.Add(new Relationship
                         {
                             character = character,
-                            level = Random.Range(MinRelationLevel,MaxtRelationLevel)
+                            level = Random.Range(MinRelationLevel, MaxtRelationLevel)
                         });
                     }
-                } );
+                });
             }
         }
 
@@ -93,7 +91,7 @@ namespace DefaultNamespace
             WinnersHelpLosers();
             LosersTakeAdvantageOfWinners();
             LoserResentWinners();
-            
+
             if (Characters.Count > 2)
             {
                 CharacterJudgeFriendShip();
@@ -102,7 +100,7 @@ namespace DefaultNamespace
             {
                 CharacterBegCharacter();
             }
-            
+
             if (Characters.Count == 1)
             {
                 startSimulation = false;
@@ -128,10 +126,10 @@ namespace DefaultNamespace
                     losers.Add(character);
                 }
             }
-            
+
             Debug.Log("Winners");
             winners.ForEach(winner => Debug.Log(winner.characterName));
-            
+
             Debug.Log("Losers");
             losers.ForEach(losers => Debug.Log(losers.characterName));
         }
@@ -157,14 +155,17 @@ namespace DefaultNamespace
 
                     if (willHelp)
                     {
-                        Debug.Log($"Character {winner.characterName} helps {loser.characterName}"); 
-                        
-                        winner.RelationUpdate(loser, MinRelationIncrement * (winner.Personality.Solidarity/100));
-                        loser.RelationUpdate(winner, MaxRelationIncrement * (loser.Personality.Gratitude/100));
-                        
+                        Debug.Log($"Character {winner.characterName} helps {loser.characterName}");
+
+                        float winnerLoserRelation = MinRelationIncrement * (1 + winner.Personality.Solidarity / 100f);
+                        winner.RelationUpdate(loser, (int)winnerLoserRelation);
+
+                        float loserWinnerRelation = MaxRelationIncrement * (1 + loser.Personality.Gratitude / 100f);
+                        loser.RelationUpdate(winner, (int)loserWinnerRelation);
+
                         newWinners.Add(loser);
                         losers.Remove(loser);
-                        
+
                         break;
                     }
                 }
@@ -182,7 +183,7 @@ namespace DefaultNamespace
             }
 
             List<Character> newWinners = new List<Character>();
-            
+
             for (int i = 0; i < losers.Count; i++)
             {
                 for (int j = 0; j < winners.Count; j++)
@@ -196,19 +197,23 @@ namespace DefaultNamespace
                     {
                         Debug.Log($"Character {loser.characterName} takes advantage of {winner.characterName}");
 
+
+                        float winnerLoserRelation = MaxRelationIncrement * (1 + (winner.Personality.Resentment / 100f -
+                            loser.Personality.Charisma / 100f));
+                        winner.RelationUpdate(loser, (int)-winnerLoserRelation);
+
                         int relationLevelLoserWinner = loser.RelationLevel(winner);
-                        
-                        winner.RelationUpdate(loser, -(MaxRelationIncrement * (winner.Personality.Resentment/100) - loser.Personality.Charisma/100));
-                        loser.RelationUpdate(winner, -MinRelationIncrement * (1 - relationLevelLoserWinner/100));
-                        
+                        float loserWinnerRelation = MinRelationIncrement * (1 + relationLevelLoserWinner / 100f);
+                        loser.RelationUpdate(winner, (int)-loserWinnerRelation);
+
                         newWinners.Add(loser);
                         losers.Remove(loser);
-                        
+
                         break;
                     }
                 }
             }
-            
+
             winners.AddRange(newWinners);
         }
 
@@ -220,24 +225,26 @@ namespace DefaultNamespace
                 {
                     Character loser = losers[i];
                     Character winner = winners[j];
-                    
-                    loser.RelationUpdate(winner, -(MinRelationIncrement * (loser.Personality.Resentment/100) - winner.Personality.Charisma/100));
+
+                    float loserWinner = MinRelationIncrement * (1 + (loser.Personality.Resentment / 100f -
+                                                                     winner.Personality.Charisma / 100f));
+                    loser.RelationUpdate(winner, (int)-loserWinner);
                 }
             }
         }
-        
+
         public void CharacterJudgeFriendShip()
         {
             for (int i = Characters.Count - 1; i >= 0; i--)
             {
                 Character judge = Characters[i];
                 Character friendToJudge = judge.WillJudgeFriend();
-                
+
                 if (friendToJudge != null)
                 {
                     Debug.Break();
                     Debug.Log($"Character {judge.characterName} started trial against {friendToJudge.characterName}");
-                    
+
                     affected.Add(judge);
                     affected.Add(friendToJudge);
 
@@ -245,13 +252,13 @@ namespace DefaultNamespace
                                                         friend.characterName != friendToJudge.characterName).ToList();
 
                     Character friendToExpel = Judgment();
-                    
+
                     Debug.Log($"The group has decided to expel {friendToExpel.characterName}");
-                    
+
                     Characters.Remove(friendToExpel);
                     Characters.ForEach(characters => characters.RemoveFriendShip(friendToExpel));
                 }
-                
+
                 affected.Clear();
                 others.Clear();
             }
@@ -268,14 +275,14 @@ namespace DefaultNamespace
             {
                 friendToExpel = affected[Random.Range(0, affected.Count)];
             }
-            
+
             return friendToExpel;
         }
 
         public int SumRelationLevel(List<Character> judges, Character affected)
         {
             int totalRelationLevel = 0;
-            
+
             for (int i = 0; i < judges.Count; i++)
             {
                 totalRelationLevel += judges[i].RelationLevel(affected);
@@ -290,28 +297,29 @@ namespace DefaultNamespace
             {
                 Character characterLeaving = Characters[i];
                 Character characterBegging = characterLeaving.WillJudgeFriend();
-                
+
                 if (characterBegging != null)
                 {
                     Debug.Break();
-                    Debug.Log($"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName} will beg");
+                    Debug.Log(
+                        $"Character {characterLeaving.characterName} wanted to leave the group {characterBegging.characterName} will beg");
 
                     int friendShipLevel = characterBegging.RelationLevel(characterLeaving);
                     bool characterWillStay = Random.Range(0, 100) <= friendShipLevel;
 
                     if (characterWillStay)
                     {
-                        characterLeaving.SetRelationLevel(characterBegging,friendShipLevel/2);
-                        characterBegging.SetRelationLevel(characterLeaving,friendShipLevel/2);
+                        characterLeaving.SetRelationLevel(characterBegging, friendShipLevel / 2);
+                        characterBegging.SetRelationLevel(characterLeaving, friendShipLevel / 2);
                     }
                     else
                     {
-                        Debug.Log($"Character {characterLeaving.characterName} leave the group {characterBegging.characterName} will die alone...");
+                        Debug.Log(
+                            $"Character {characterLeaving.characterName} leave the group {characterBegging.characterName} will die alone...");
                         Characters.Remove(characterLeaving);
                     }
-                    
                 }
-            }   
+            }
         }
     }
 }
